@@ -1,0 +1,10 @@
+{
+    "name":"gebo-mongoose-connection",
+    "email":"gebo-mongoose-connection@example.com",
+    "domain":"https://localhost",
+    "port":3000,
+    "httpsPort":3443,
+    "docs": "docs",
+    "cachify":false,
+    "testEmail": "gebo-mongoose-connection-test@example.com"
+}

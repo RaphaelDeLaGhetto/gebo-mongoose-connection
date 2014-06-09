@@ -1,0 +1,30 @@
+{
+  "name": "gebo-mongoose-connection",
+  "version": "0.0.0",
+  "description": "A Mongoose connection wrapped up in a singleton",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodeunit test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-mongoose-connection.git"
+  },
+  "keywords": [
+    "gebo",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "Daniel Bidulock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-mongoose-connection/issues"
+  },
+  "homepage": "https://github.com/RaphaelDeLaGhetto/gebo-mongoose-connection",
+  "dependencies": {
+    "gebo-utils": "0.0.1",
+    "mongoose": "^3.8.12",
+    "nconf": "^0.6.9",
+    "winston": "^0.7.3"
+  }
+}
