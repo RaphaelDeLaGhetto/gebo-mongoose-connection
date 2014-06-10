@@ -22,10 +22,10 @@ exports.get = {
 
     'Should distinguish between testing and production mode': function(test) {
         test.expect(1);
-        var mongooseConn = require('..');
+        var geboMongoose = require('..');
 
-        var mongoose = mongooseConn.get();
-        mongooseConn.once('mongoose-connect', function() {
+        var mongoose = geboMongoose.get();
+        geboMongoose.once('mongoose-connect', function() {
             test.equal(mongoose.connection.name, utils.getMongoDbName(nconf.get('email')));
             mongoose.connection.db.close();
             test.done();
@@ -58,7 +58,7 @@ exports.get = {
 
         test.ok(mongooseConn instanceof events.EventEmitter);
         var mongoose = mongooseConn.get(true);
-        mongooseConn.on('mongoose-connect', function() {
+        mongooseConn.once('mongoose-connect', function() {
             test.ok(true);
             mongoose.connection.db.close();
             test.done();
