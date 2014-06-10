@@ -6,50 +6,50 @@ var events = require('events'),
 nconf.file({ file: './gebo.json' });
 
 /**
- * Test the singleton pattern
+ * get
+ *
+ * Note: this will log a lot of errors. I don't think this matters,
+ * because the errors seem to be a result of the deletion of the
+ * module out of require.cache (which presumably causes the DB
+ * to disconnect immediately)
  */
-exports.instantiate = {
+exports.get = {
 
     tearDown: function(callback) {
         delete require.cache[require.resolve('..')];
         callback();
     },
 
-    'Should return a connection instance': function(test) {
-        test.expect(1);
-        var mongooseConn = require('..');
-
-        mongooseConn.get(true, function(conn) {
-            test.equal(conn.name, utils.getMongoDbName(nconf.get('testEmail')));
-            test.done();
-          });
-    },
-
-    'Should behave as a singleton': function(test) {
-        test.expect(2);
-        var mongooseConn = require('..');
-        
-        mongooseConn.get(true, function(conn) {
-            test.equal(conn.name, utils.getMongoDbName(nconf.get('testEmail')));
-            var anotherDbConnection = require('..');
-
-            anotherDbConnection.get(true, function(conn2) {
-                test.equal(conn, conn2);
-                test.done();
-              });
-          });
-    },
-
     'Should distinguish between testing and production mode': function(test) {
         test.expect(1);
         var mongooseConn = require('..');
 
-        // Note: the first boolean parameter has been omitted,
-        // which should put it into production mode
-        mongooseConn.get(function(conn) {
-            test.equal(conn.name, utils.getMongoDbName(nconf.get('email')));
+        var mongoose = mongooseConn.get();
+        mongooseConn.once('mongoose-connect', function() {
+            test.equal(mongoose.connection.name, utils.getMongoDbName(nconf.get('email')));
+            mongoose.connection.db.close();
             test.done();
           });
+    },
+
+
+    'Should return a connection instance': function(test) {
+        test.expect(1);
+        var mongoose = require('..').get(true);
+
+        test.equal(mongoose.connection.name, utils.getMongoDbName(nconf.get('testEmail')));
+        test.done();
+    },
+
+    'Should behave as a singleton': function(test) {
+        test.expect(2);
+        var mongoose = require('..').get(true);
+
+        test.equal(mongoose.connection.name, utils.getMongoDbName(nconf.get('testEmail')));
+        var anotherDbConnection = require('..').get(true);
+
+        test.equal(anotherDbConnection.connection, mongoose.connection);
+        test.done();
     },
 
     'Should emit an event on connect': function(test) {
@@ -57,11 +57,12 @@ exports.instantiate = {
         var mongooseConn = require('..');
 
         test.ok(mongooseConn instanceof events.EventEmitter);
-        mongooseConn.get(true, function(conn) {});
+        var mongoose = mongooseConn.get(true);
         mongooseConn.on('mongoose-connect', function() {
             test.ok(true);
+            mongoose.connection.db.close();
             test.done();
-        });
+          });
     },
 };
 

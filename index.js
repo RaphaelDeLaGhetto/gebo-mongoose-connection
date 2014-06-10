@@ -12,29 +12,38 @@ nconf.file({ file: './gebo.json' });
 var winston = require('winston'),
     logger = new (winston.Logger)({ transports: [ new (winston.transports.Console)({ colorize: true }) ] });
 
-// The moongoose connection
-var connectionInstance;
+// The mongoose connection
+var goose;
 
-// This module emits the mongoose-connect event when
-// successfully connected to mongo with the 
-// mongoose driver
+/**
+ * This module emits the mongoose-connect event when
+ * successfully connected to mongo with the 
+ * mongoose driver
+ */
 exports = module.exports = new EventEmitter();
 
-exports.get = function(testing, callback) {
+/**
+ * Get the connected instance of mongoose
+ *
+ * @param bool - true for testing mode
+ *
+ * @return Object - mongoose instance
+ */
+exports.get = function(testing) {
 
-    if (typeof testing === 'function') {
-      callback = testing;
+    if (testing === undefined) {
       testing = false;
     }
 
-    // If we already have a connection, don't connect to the database again
-    if (connectionInstance) {
-      callback(connectionInstance);
-      return;
+    // If we already have a connection, don't connect to the database again.
+    // I question whether this is really necessary...
+    if (goose) {
+      return goose;
     }
 
     var dbName = utils.getMongoDbName(nconf.get('email'));
     if (testing) {
+      logger.info('gebo-mongoose is in test mode');
       dbName = utils.getMongoDbName(nconf.get('testEmail'));
     }
 
@@ -51,17 +60,22 @@ exports.get = function(testing, callback) {
     /**
      * Connect to mongo
      */
-    var connection = mongoose.createConnection(uristring, mongoOptions);
-    connection.on('open', function() {
-        exports.emit('mongoose-connect');
-        logger.info('Successfully established Mongoose connection to:', uristring);
-      });
+    mongoose.connect(uristring);
 
-    connection.on('error', function(err) {
+    /**
+     * Events
+     */
+    mongoose.connection.on('open', function() {
+        logger.info('Successfully established Mongoose connection to:', uristring);
+        exports.emit('mongoose-connect');
+     });
+
+    mongoose.connection.on('error', function(err) {
         logger.error('No Mongoose connection:', uristring, err);
       });
 
-    connectionInstance = connection;
-    callback(connection);
+    goose = mongoose;
+
+    return mongoose;
   };
 
