@@ -1,6 +1,6 @@
 {
   "name": "gebo-mongoose-connection",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Mongoose connection wrapped up in a singleton",
   "main": "index.js",
   "scripts": {
