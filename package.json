@@ -1,7 +1,7 @@
 {
   "name": "gebo-mongoose-connection",
   "version": "0.0.1",
-  "description": "A Mongoose connection wrapped up in a singleton",
+  "description": "A ready-to-use mongoose connection for gebo",
   "main": "index.js",
   "scripts": {
     "test": "nodeunit test/index.js"
