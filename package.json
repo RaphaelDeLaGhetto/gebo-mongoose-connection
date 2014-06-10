@@ -1,6 +1,6 @@
 {
   "name": "gebo-mongoose-connection",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A ready-to-use mongoose connection for gebo",
   "main": "index.js",
   "scripts": {
