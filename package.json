@@ -23,7 +23,7 @@
   "homepage": "https://github.com/RaphaelDeLaGhetto/gebo-mongoose-connection",
   "dependencies": {
     "gebo-utils": "0.0.1",
-    "mongoose": "^3.8.12",
+    "mongoose": "3.8",
     "nconf": "^0.6.9",
     "winston": "^0.7.3"
   }
