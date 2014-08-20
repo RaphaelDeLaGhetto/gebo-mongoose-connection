@@ -6,5 +6,6 @@
     "httpsPort":3443,
     "docs": "docs",
     "cachify":false,
-    "testEmail": "gebo-mongoose-connection-test@example.com"
+    "testEmail": "gebo-mongoose-connection-test@example.com",
+    "logLevel": "trace"
 }

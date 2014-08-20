@@ -8,6 +8,7 @@ var EventEmitter = require('events').EventEmitter,
   
 var nconf = require('nconf');
 nconf.file({ file: './gebo.json' });
+var logLevel = nconf.get('logLevel');
 
 var winston = require('winston'),
     logger = new (winston.Logger)({ transports: [ new (winston.transports.Console)({ colorize: true }) ] });
@@ -43,7 +44,7 @@ exports.get = function(testing) {
 
     var dbName = utils.getMongoDbName(nconf.get('email'));
     if (testing) {
-      logger.info('gebo-mongoose is in test mode');
+     if (logLevel !== 'off') logger.info('gebo-mongoose is in test mode');
       dbName = utils.getMongoDbName(nconf.get('testEmail'));
     }
 
@@ -66,12 +67,12 @@ exports.get = function(testing) {
      * Events
      */
     mongoose.connection.on('open', function() {
-        logger.info('Successfully established Mongoose connection to:', uristring);
+        if (logLevel !== 'off') logger.info('Successfully established Mongoose connection to:', uristring);
         exports.emit('mongoose-connect');
      });
 
     mongoose.connection.on('error', function(err) {
-        logger.error('No Mongoose connection:', uristring, err);
+        if (logLevel !== 'off') logger.error('No Mongoose connection:', uristring, err);
       });
 
     goose = mongoose;
