@@ -44,7 +44,7 @@ exports.get = function(testing) {
 
     var dbName = utils.getMongoDbName(nconf.get('email'));
     if (testing) {
-     if (logLevel !== 'off') logger.info('gebo-mongoose is in test mode');
+     if (logLevel !== 'trace') logger.info('gebo-mongoose is in test mode');
       dbName = utils.getMongoDbName(nconf.get('testEmail'));
     }
 
@@ -67,7 +67,7 @@ exports.get = function(testing) {
      * Events
      */
     mongoose.connection.on('open', function() {
-        if (logLevel !== 'off') logger.info('Successfully established Mongoose connection to:', uristring);
+        if (logLevel !== 'trace') logger.info('Successfully established Mongoose connection to:', uristring);
         exports.emit('mongoose-connect');
      });
 
